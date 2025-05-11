@@ -1,10 +1,5 @@
 const SELECT_CLUB_TOP_PLAYERS = `
-    SELECT i.eesnimi || ' ' || i.perenimi AS name, i.ranking AS ranking, i.id AS id
-    FROM isikud i
-    JOIN klubid k ON i.klubis = k.id
-    WHERE k.id = $1 AND i.ranking IS NOT NULL
-    ORDER BY i.ranking DESC
-    LIMIT 3;
+    SELECT * FROM f_klubiparimad((SELECT nimi FROM klubid WHERE id = $1));
 `
 ;
 

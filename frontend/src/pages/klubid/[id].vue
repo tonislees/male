@@ -43,16 +43,16 @@
         <v-col cols="12" md="6">
         <h2>TOP mängijad</h2>
         <v-row>
-          <v-col cols="10" v-for="(player, index) in clubTopPlayers" :key="player.id">
+          <v-col cols="10" v-for="(player, index) in clubTopPlayers" :key="player.isik">
             <v-card>
               <v-card-title>
                 <v-row align="center">
                   <v-col cols="8">
                     <v-chip :color="getChipColor(index)" class="ma-2" label>{{ index + 1 }}</v-chip>
-                    {{ player.name }}
+                    {{ player.isik }}
                   </v-col>
                   <v-col cols="4" class="text-right points">
-                    {{ player.ranking }}
+                    {{ parseFloat(player.punktisumma).toFixed(1) }}
                   </v-col>
                 </v-row>
               </v-card-title>
