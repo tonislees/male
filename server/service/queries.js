@@ -1,3 +1,13 @@
+const SELECT_CLUB_TOP_PLAYERS = `
+    SELECT i.eesnimi || ' ' || i.perenimi AS name, i.ranking AS ranking, i.id AS id
+    FROM isikud i
+    JOIN klubid k ON i.klubis = k.id
+    WHERE k.id = $1 AND i.ranking IS NOT NULL
+    ORDER BY i.ranking DESC
+    LIMIT 3;
+`
+;
+
 const SELECT_MATCH_BY_ID = `
   SELECT
     p.id,
@@ -295,6 +305,7 @@ const DELETE_CLUB = `
 `
 
 module.exports = {
+    SELECT_CLUB_TOP_PLAYERS,
     SELECT_MATCH_BY_ID,
     getAddOrUpdateMatchQuery,
     SELECT_ONGOING_MATCHES,

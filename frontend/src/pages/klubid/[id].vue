@@ -40,6 +40,26 @@
             @club-updated="fetchClubData"
           />
         </v-col>
+        <v-col cols="12" md="6">
+        <h2>TOP mängijad</h2>
+        <v-row>
+          <v-col cols="10" v-for="(player, index) in clubTopPlayers" :key="player.id">
+            <v-card>
+              <v-card-title>
+                <v-row align="center">
+                  <v-col cols="8">
+                    <v-chip :color="getChipColor(index)" class="ma-2" label>{{ index + 1 }}</v-chip>
+                    {{ player.name }}
+                  </v-col>
+                  <v-col cols="4" class="text-right points">
+                    {{ player.ranking }}
+                  </v-col>
+                </v-row>
+              </v-card-title>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-col>
       </v-row>
 
       <v-row cols="12" md="8">
@@ -68,6 +88,7 @@
 
 <script>
 import {fetchClubById} from "@/wrapper/clubsApiWrapper.js";
+import {fetchClubTopPlayers} from "@/wrapper/clubsApiWrapper.js";
 import PlayersSearchTable from "@/components/clubs/PlayersSearchTable.vue";
 import AddClubDialog from "@/components/clubs/AddClubDialog.vue";
 import ModifyClubForm from "@/components/clubs/ModifyClubForm.vue";
@@ -84,17 +105,29 @@ export default {
       club: null,
       clubId: null,
       showModifyClubDialog: false,
+      clubTopPlayers: []
     }
   },
-  created() {
-    this.clubId = this.$route.params.id;
-    this.$watch(
-      () => this.$route.params.id,
-      this.fetchClubData,
-      {immediate: true}
-    )
-  },
   methods: {
+    getChipColor(index) {
+      switch (index) {
+        case 0:
+          return 'gold';
+        case 1:
+          return 'silver';
+        case 2:
+          return 'bronze';
+        default:
+          return 'primary';
+      }
+    },
+    loadData() {
+      this.fetchClubData()
+      this.fetchClubTopPlayers()
+    },
+    async fetchClubTopPlayers() {
+      this.clubTopPlayers = await fetchClubTopPlayers(this.clubId)
+    },
     async fetchClubData() {
       this.club = await fetchClubById(this.clubId)
     },
@@ -104,8 +137,15 @@ export default {
     updateShowModifyDialog(value) {
       this.showModifyClubDialog = value;
     },
+  },
+  created() {
+    this.clubId = this.$route.params.id;
+    this.$watch(
+      () => this.$route.params.id,
+      this.loadData,
+      {immediate: true}
+    )
   }
-
 }
 </script>
 
